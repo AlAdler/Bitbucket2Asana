@@ -26,6 +26,7 @@
             "json()": {
                 "Ruby on Rails": {
                     "command": "",
+                    "debug": true,
                     "default": true,
                     "name": "Ruby on Rails",
                     "runner": "Ruby on Rails (Rails 4.0 + Ruby 2.1)"

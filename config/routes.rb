@@ -26,6 +26,8 @@ Rails.application.routes.draw do
   #     end
   #   end
 
+  post 'commits' => 'commits#post'
+
   # Example resource route with sub-resources:
   #   resources :products do
   #     resources :comments, :sales
