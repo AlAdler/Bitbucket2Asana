@@ -8,28 +8,43 @@ class CommitsController < ApplicationController
         push['commits'].each do |commit|
             has_asana = false
             if commit['message'].include?('#')
-                taskid = commit['message'].partition("#").last.partition(" ").first.gsub(/\n/, '')
+                taskid = get_taskid_from_message_with_numsign(commit['message'])
                 has_asana = true
             elsif commit['message'].include?('app.asana.com')
-                splitted = commit['message'].partition("app.asana.com").last.partition(" ").first.split("/")
-                taskid = (splitted.last != 'f' ? splitted.last : splitted[splitted.length - 2]).gsub(/\n/, '')
+                taskid = get_taskid_from_message_with_url(commit['message'])
                 has_asana = true
             end
             if has_asana
                 asana_url = "https://app.asana.com/api/1.0/tasks/#{taskid}/stories"
-                comment = push['user'] + " pushed to branch " + commit['branch'] + " of " + push['repository']['name'] + "\n- " + commit['message']
-                uri = URI.parse(asana_url)
-                http = Net::HTTP.new(uri.host, uri.port)
-                http.use_ssl = true
-                http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-                request = Net::HTTP::Post.new(uri.path, {'Content-Type' =>'application/json'})
-                request.basic_auth(ENV['ASANA_API_KEY'], '')
-                request.body = { "data" => { "text" => comment }}.to_json
-                http.request(request)
+                comment = create_comment_string(push, commit)
+                send_comment_to_asana(asana_url, comment)
             end
         end
-        
         render json: push
+    end
+    
+    def send_comment_to_asana(asana_url, comment)
+        uri = URI.parse(asana_url)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        request = Net::HTTP::Post.new(uri.path, {'Content-Type' =>'application/json'})
+        request.basic_auth(ENV['ASANA_API_KEY'], '')
+        request.body = { "data" => { "text" => comment }}.to_json
+        http.request(request) 
+    end
+    
+    def get_taskid_from_message_with_numsign(message)
+       return message.partition("#").last.partition(" ").first.gsub(/\n/, '')
+    end
+    
+    def get_taskid_from_message_with_url(message)
+        splitted = message.partition("app.asana.com").last.partition(" ").first.split("/")
+        return (splitted.last != 'f' ? splitted.last : splitted[splitted.length - 2]).gsub(/\n/, '')
+    end
+    
+    def create_comment_string(push, commit)
+       return push['user'] + " pushed to branch " + commit['branch'] + " of " + push['repository']['name'] + "\n- " + commit['message'] + "\nCommit URL: https://bitbucket.org" + push['repository']['absolute_url'] + "commits/" + commit['raw_node'] 
     end
     
 end
