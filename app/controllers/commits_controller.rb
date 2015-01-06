@@ -1,3 +1,5 @@
+require 'net/http'
+
 class CommitsController < ApplicationController
     
     def post
