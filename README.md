@@ -1,24 +1,13 @@
+#Bitbucket2Asana
 
-     ,-----.,--.                  ,--. ,---.   ,--.,------.  ,------.
-    '  .--./|  | ,---. ,--.,--. ,-|  || o   \  |  ||  .-.  \ |  .---'
-    |  |    |  || .-. ||  ||  |' .-. |`..'  |  |  ||  |  \  :|  `--, 
-    '  '--'\|  |' '-' ''  ''  '\ `-' | .'  /   |  ||  '--'  /|  `---.
-     `-----'`--' `---'  `----'  `---'  `--'    `--'`-------' `------'
-    ----------------------------------------------------------------- 
+##Push your commits to Bitbucket and automatically create comments in Asana tasks.
 
+When you commit some code, put somewhere in the commit comment a # followed by the Asana task id. For example: git commit -m "fixed ugly bug #12345678". Your commit will appear in the task as a comment when you push it.
 
-Welcome to your Rails project on Cloud9 IDE!
+The task id in Asana is the last part of the URL in the Asana web app.
 
-To get started, just do the following:
+Setup:
+This is ready to be hosted in Heroku. 
+- You need to set up a config variable called ASANA_API_KEY with your Asana API key (find it in Asana => account settings => Apps).
+- In your Bitbucket repo, go to settings => hooks, select POST and write your Heroku app URL followed by "/commits". For example: https://some-random-name-1234.herokuapp.com/commits
 
-1. Run the project with the "Run Project" button in the menu bar on top of the IDE.
-2. Preview your new app by clicking on the URL that appears in the Run panel below (https://bitbucket2asana-aladler.c9.io/).
-
-Happy coding!
-The Cloud9 IDE team
-
-
-## Support & Documentation
-
-Visit http://docs.c9.io for support, or to learn more about using Cloud9 IDE. 
-To watch some training videos, visit http://www.youtube.com/user/c9ide
