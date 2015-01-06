@@ -6,8 +6,16 @@ class CommitsController < ApplicationController
         push = JSON.parse params['payload']
         logger.info push
         push['commits'].each do |commit|
-            if (commit['message'].include?('#'))
+            has_asana = false
+            if commit['message'].include?('#')
                 taskid = commit['message'].partition("#").last.partition(" ").first.gsub(/\n/, '')
+                has_asana = true
+            elsif commit['message'].include?('app.asana.com')
+                splitted = commit['message'].partition("app.asana.com").last.partition(" ").first.split("/")
+                taskid = (splitted.last != 'f' ? splitted.last : splitted[splitted.length - 2]).gsub(/\n/, '')
+                has_asana = true
+            end
+            if has_asana
                 asana_url = "https://app.asana.com/api/1.0/tasks/#{taskid}/stories"
                 comment = push['user'] + " pushed to branch " + commit['branch'] + " of " + push['repository']['name'] + "\n- " + commit['message']
                 uri = URI.parse(asana_url)
