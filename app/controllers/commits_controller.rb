@@ -7,7 +7,7 @@ class CommitsController < ApplicationController
         logger.info push
         push['commits'].each do |commit|
             if (commit['message'].include?('#'))
-                taskid = commit['message'].partition("#").last.partition(" ").first
+                taskid = commit['message'].partition("#").last.partition(" ").first.gsub(/\n/, '')
                 asana_url = "https://app.asana.com/api/1.0/tasks/#{taskid}/stories"
                 comment = push['user'] + " pushed to branch " + commit['branch'] + " of " + push['repository']['name'] + "\n- " + commit['message']
                 uri = URI.parse(asana_url)
