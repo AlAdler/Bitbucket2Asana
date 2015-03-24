@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<h3>You are almost done:</h3>
+<p>
+  In your Bitbucket repo, go to settings => hooks, select POST and enter this URL:<br />
+  <strong><%= 'http://' + request.host + '/commits?b2acode=' + @bitbucket2_asana_connection.b2a_code %></strong><br />
+  Now when you commit some code, put somewhere in the commit comment a # followed by the Asana task id or the complete Asana task URL.<br />
+  For example: git commit -m "fixed ugly bug #12345678". Or git commit -m "fixed ugly bug https://app.asana.com/123123/0/12345678".<br />
+  Your commit will appear in the task as a comment when you push it.<br />
+  Note: The task id in Asana is the last part of the URL in the Asana web app.
+</p>
+
+<%= link_to 'Back', new_bitbucket2_asana_connection_path %> |
+<%= link_to 'Destroy', @bitbucket2_asana_connection, method: :delete, data: { confirm: 'Are you sure?' } %>

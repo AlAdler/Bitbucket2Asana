@@ -3,6 +3,8 @@ require 'net/http'
 class CommitsController < ApplicationController
     
     def post
+        @b2aConnection = Bitbucket2AsanaConnection.find_by_b2a_code(params['b2acode'])
+        return if @b2aConnection.nil?
         push = JSON.parse params['payload']
         logger.info push
         push['commits'].each do |commit|
@@ -29,7 +31,7 @@ class CommitsController < ApplicationController
         http.use_ssl = true
         http.verify_mode = OpenSSL::SSL::VERIFY_PEER
         request = Net::HTTP::Post.new(uri.path, {'Content-Type' =>'application/json'})
-        request.basic_auth(ENV['ASANA_API_KEY'], '')
+        request.basic_auth(@b2aConnection.asana_api_key, '')
         request.body = { "data" => { "text" => comment }}.to_json
         http.request(request) 
     end

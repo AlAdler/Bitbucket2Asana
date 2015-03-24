@@ -1,0 +1,21 @@
+<%= form_for(@bitbucket2_asana_connection) do |f| %>
+  <% if @bitbucket2_asana_connection.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@bitbucket2_asana_connection.errors.count, "error") %> prohibited this bitbucket2_asana_connection from being saved:</h2>
+
+      <ul>
+      <% @bitbucket2_asana_connection.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    Enter you Asana API key to start:<br>
+    <%= f.text_field :asana_api_key %>
+  </div>
+  <div class="actions">
+    <%= f.submit "Continue"%>
+  </div>
+<% end %>
