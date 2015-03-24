@@ -4,7 +4,7 @@ class CommitsController < ApplicationController
     
     def post
         @b2aConnection = Bitbucket2AsanaConnection.find_by_b2a_code(params['b2acode'])
-        return if @b2aConnection.nil?
+        return render :nothing => true, :status => 200, :content_type => 'text/html' if @b2aConnection.nil?
         push = JSON.parse params['payload']
         logger.info push
         push['commits'].each do |commit|
